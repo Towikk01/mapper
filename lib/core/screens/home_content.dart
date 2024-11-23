@@ -1,80 +1,135 @@
 import 'package:flutter/material.dart';
+import 'package:mapper/core/screens/map_screen.dart';
+import 'package:mapper/core/theme/app_colors.dart';
 
 class HomeContent extends StatefulWidget {
   const HomeContent({super.key});
+
   @override
   State<HomeContent> createState() => _HomeContentState();
 }
 
 class _HomeContentState extends State<HomeContent> {
-  bool _isRevealed = true; // Text and icon should be visible initially
+  bool _isRevealed = false;
 
-  void _revealArea() {
+  void _toggleRevealed() {
     setState(() {
       _isRevealed = !_isRevealed;
+    });
+
+    // Navigate to MapScreen and reset _isRevealed when returning
+    Future.delayed(const Duration(seconds: 1), () {
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const MapScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const curve = Curves.easeInOut;
+            final curvedAnimation = CurvedAnimation(
+              parent: animation,
+              curve: curve,
+            );
+
+            return FadeTransition(
+              opacity: curvedAnimation,
+              child: child,
+            );
+          },
+        ),
+      ).then((_) {
+        // Reset _isRevealed when returning to the home screen
+        setState(() {
+          _isRevealed = false;
+        });
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      // Ensure Stack is the direct parent of Positioned
-      children: [
-        // Background layer
-        Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            image: DecorationImage(
-              opacity: 0.3,
-              image: AssetImage(
-                  'assets/map-2.webp'), // Make sure this path is correct
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: const Center(
-            child: Text(
-              "Map Background Loaded",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          ),
-        ),
+    final size = MediaQuery.of(context).size;
 
-        // Overlay text like "Found Treasuries" or "Hidden Temples"
-        Positioned(
-          top: 100,
-          left: 50,
-          child: AnimatedOpacity(
-            opacity: _isRevealed ? 1.0 : 0.0,
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Background map image
+          AnimatedOpacity(
+            opacity: _isRevealed ? 1.0 : 0.2,
             duration: const Duration(seconds: 1),
-            child: const Text(
-              'Found Treasuries!',
-              style: TextStyle(
-                fontSize: 36,
-                fontWeight: FontWeight.bold,
-                color: Colors.yellow,
-                shadows: [Shadow(blurRadius: 10, color: Colors.black)],
+            child: Container(
+              width: size.width,
+              height: size.height,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/map-2.webp'),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
-        ),
 
-        // Interactive area
-        GestureDetector(
-          onTap: _revealArea, // This will toggle the reveal effect
-          child: AnimatedPositioned(
-            duration: const Duration(seconds: 1),
-            left: _isRevealed ? 100.0 : 0.0, // Change position when revealed
-            top: _isRevealed ? 200.0 : 100.0, // Change position when revealed
-            child: _isRevealed
-                ? FloatingActionButton(
-                    onPressed: _revealArea,
-                    backgroundColor: Colors.yellow,
-                    child: const Icon(Icons.visibility),
-                  )
-                : Container(),
+          // Content
+          AnimatedOpacity(
+            opacity: _isRevealed ? 0.0 : 1.0,
+            duration: const Duration(milliseconds: 700),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Discover new locations!',
+                    style: TextStyle(
+                      fontSize: 32,
+                      color: Colors.yellow,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 10,
+                          color: Colors.black,
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                    'Discover something new around you - from the most popular places to the most hidden corners of the world!',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _toggleRevealed,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                        vertical: 10,
+                      ),
+                      backgroundColor: AppColors.buttonRed,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text(
+                      'Enter the Map',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: AppColors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

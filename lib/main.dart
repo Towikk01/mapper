@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'package:mapper/core/screens/home_screen.dart';
+import 'package:mapper/core/screens/map_screen.dart';
+import 'package:mapper/core/screens/profile_screen.dart';
 import 'package:mapper/core/theme/theme.dart';
 
 void main() {
@@ -15,7 +18,12 @@ class MyApp extends StatelessWidget {
       title: 'Mapper',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
-      home: const HomeScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const HomeScreen(),
+        '/map': (context) => const MapScreen(),
+        '/profile': (context) => const ProfileScreen(),
+      },
     );
   }
 }
