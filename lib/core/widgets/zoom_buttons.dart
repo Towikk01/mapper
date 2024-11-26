@@ -26,13 +26,6 @@ class ZoomButtons extends StatelessWidget {
           backgroundColor: Colors.orange,
           child: const Icon(Icons.zoom_out),
         ),
-        const SizedBox(height: 10),
-        FloatingActionButton(
-          heroTag: 'toggle_fog',
-          onPressed: toggleFogVisibility,
-          backgroundColor: Colors.orange,
-          child: const Icon(Icons.opacity),
-        ),
       ],
     );
   }

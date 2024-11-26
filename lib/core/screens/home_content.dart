@@ -51,6 +51,10 @@ class _HomeContentState extends State<HomeContent> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Text('Home page', style: TextStyle(color: AppColors.gold)),
+      ),
       body: Stack(
         children: [
           // Background map image
@@ -62,7 +66,7 @@ class _HomeContentState extends State<HomeContent> {
               height: size.height,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/map-2.webp'),
+                  image: AssetImage('assets/LandTexture.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),

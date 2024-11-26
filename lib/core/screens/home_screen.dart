@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mapper/core/screens/home_content.dart';
 import 'package:mapper/core/screens/map_screen.dart';
 import 'package:mapper/core/screens/profile_screen.dart';
-import 'package:mapper/core/theme/app_colors.dart';
 import 'package:mapper/core/widgets/bottom_nav_bar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   final List<Widget> _screens = [
-    HomeContent(),
+    const HomeContent(),
     const MapScreen(),
     const ProfileScreen(),
   ];
@@ -35,10 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text('Mapper', style: TextStyle(color: AppColors.gold)),
-      ),
       body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavBar(
         index: _selectedIndex,
